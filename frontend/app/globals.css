@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* SEDAAPI colour system (light gold)
+   Warm brown ink for text, rich gold as the main brand colour, soft light gold as the accent,
+   warm ivory surfaces. Gradients stay inside the gold family so they never turn muddy.
+   Token names are kept so classes stay stable: "brand" = gold, "aqua" = light gold. */
+@theme {
+  --color-ink-950: #1c160d;
+  --color-ink-900: #2a2216;
+  --color-ink-800: #3a2f1f;
+  --color-ink-700: #4f4434;
+  --color-ink-500: #7a6d5a;
+  --color-ink-300: #c2b6a1;
+  --color-ink-100: #efe7d8;
+
+  --color-surface: #fcf9f3;
+  --color-surface-2: #f7f0e3;
+
+  --color-brand-50: #fdf8ec;
+  --color-brand-100: #f8ecd0;
+  --color-brand-400: #d4a843;
+  --color-brand-500: #c0902c;
+  --color-brand-600: #a87818;
+  --color-brand-700: #8a6112;
+
+  --color-aqua-300: #f3dc9e;
+  --color-aqua-400: #e3b94f;
+  --color-aqua-500: #cf9f32;
+
+  --color-mint-500: #10b981;
+
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-heading), system-ui, sans-serif;
+  --font-arabic: var(--font-ar), Tahoma, sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-spin-slow: spin-slow 40s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.2s ease-out infinite;
+}
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes float { 50% { transform: translateY(-12px); } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgb(227 185 79 / .55); } 80%,100% { box-shadow: 0 0 0 12px rgb(227 185 79 / 0); } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes shine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body { background: #fffdf9; color: var(--color-ink-900); }
+::selection { background: var(--color-brand-100); }
+
+/* signature gradient */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-brand-700) 10%, var(--color-aqua-500) 90%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-gradient-brand { background: linear-gradient(120deg, var(--color-brand-700), var(--color-brand-500)); }
+
+/* primary button sheen */
+.btn-shine { position: relative; overflow: hidden; isolation: isolate; }
+.btn-shine::after {
+  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .45), transparent);
+  transform: skewX(-20deg); animation: shine 4.5s ease-in-out infinite; z-index: -1;
+}
+
+/* hero backdrop */
+.hero-bg {
+  background:
+    radial-gradient(900px 480px at 85% -5%, rgb(227 185 79 / .16), transparent 60%),
+    radial-gradient(900px 520px at 0% 100%, rgb(168 120 24 / .12), transparent 60%);
+}
+.dot-grid {
+  background-image: radial-gradient(rgb(42 34 22 / .09) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at 70% 30%, #000 25%, transparent 70%);
+}
+
+/* scroll reveal (see components/Reveal.js) */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* hero entrance */
+.rise { opacity: 0; animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards; }
+
+/* card with gradient border on hover */
+.card-glow { position: relative; }
+.card-glow::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(130deg, var(--color-brand-600), var(--color-aqua-400));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .35s;
+  pointer-events: none;
+}
+.card-glow:hover::before { opacity: 1; }
+
+/* faq */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .faq-icon { transform: rotate(45deg); background: var(--color-brand-600); color: #fff; }
+
+/* progress line in "how to order" */
+.line-fill { transform: scaleX(0); transform-origin: left; transition: transform 1.8s cubic-bezier(.2,.7,.2,1); }
+.is-in .line-fill { transform: scaleX(1); }
+
+.tick path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw .6s .2s forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal, .rise { opacity: 1 !important; transform: none !important; }
+  .line-fill { transform: none; }
+}
